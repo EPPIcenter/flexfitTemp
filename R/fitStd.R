@@ -211,11 +211,11 @@ fitStd <- function(std, xvar, yvar, dilvar = "Dilution",
   #---------------------------- calculate bounds ------------------------------#
   if (grepl("sig", model)) {
     bounds <- c(bounds, calcBoundsSig(fitpar, range(std[, xvar])))
-    if (length(bounds) == 2) {
-      warning(paste(info,
-                    "Fit is not good, try estimating lower asymptote if fixed"))
-      return(list(par = NULL, bounds = bounds, iout = iout, flag = "no_fit"))
-    }
+#    if (length(bounds) == 2) {
+#      warning(paste(info,
+#                    "Fit is not good, try estimating lower asymptote if fixed"))
+#      return(list(par = NULL, bounds = bounds, iout = iout, flag = "no_fit"))
+#    }   #*** remove later
   } else {}
   if (rm.after) {
     abline(h = bounds[c("lowerbound", "upperbound")], col = rugcol[2], lty = 4)
