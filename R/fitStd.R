@@ -19,10 +19,8 @@
 #'
 #' @export
 
-#*** added defaults for dilvar, stdcol, rugcol (not in flexfit)
-#*** added nv = 10 (but not documented!)
+#*** added nv = 10 (but not documented!) - did NOT update in flexfit!!!
 #*** note nv is still NOT and arg for processSmp() - decide if keep that way
-#*** added options(warn = 1) - in that case can remove from processSmp()
 #*** check the replottings; some might be unnecessary
 #*** look into bounds plotting (manual setting) - possible interactivity errors?
 #*** note plotFit() now has trimval, trimext args (so use instead of abline?)
@@ -35,7 +33,7 @@ fitStd <- function(std, xvar, yvar, dilvar = "Dilution",
                    info = "", ifix = NULL, nv = 10,
                    stdcol = c("firebrick3", "darkslategray"),
                    rugcol = c("cadetblue", "purple", "firebrick2"), ...) {
-  options(warn = 1)
+  options(warn = 1)                        # for interactivity
   if (!is.null(Alow) && Alow == "bg") Alow <- mean(bg)  # on a log scale
   flag <- ""
   iout <- NULL
@@ -59,7 +57,8 @@ fitStd <- function(std, xvar, yvar, dilvar = "Dilution",
     plotFit(std, xvar, yvar, dilvar, bg = bg, vsmp = vsmp,
             stdcol = stdcol, rugcol = rugcol, ...)
     for (i in 1:maxrm) {
-      ans1 <- readline("Remove any outliers? (y/n) ")
+      wd <- ifelse(i == 1, "any", "more")
+      ans1 <- readline(paste("Remove", wd, "outliers? (y/n) "))
       if (tolower(ans1) == "y"){
         flag <- "pts_rm"
         mtext("Click on an outlier", col = "red", cex = 1.2)
@@ -139,7 +138,8 @@ fitStd <- function(std, xvar, yvar, dilvar = "Dilution",
 #            vsmp = vsmp, stdcol = stdcol, rugcol = rugcol, ...)
 
     for (i in 1:maxrm) {
-      ans1 <- readline("Remove any outliers? (y/n) ")
+      wd <- ifelse(i == 1, "any", "more")
+      ans1 <- readline(paste("Remove", wd, "outliers? (y/n) "))
       if (tolower(ans1) == "y"){
         flag <- "pts_rm"
         mtext("Click on an outlier", col = "red", cex = 1.2)
