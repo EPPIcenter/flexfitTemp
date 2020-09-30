@@ -22,6 +22,8 @@
 #*** added defaults for dilvar, stdcol, rugcol (not in flexfit)
 #*** added nv = 10 (but not documented!)
 #*** added options(warn = 1) - in that case can remove from processSmp()
+#*** check the replottings; some might be unnecessary
+#*** look into bounds plotting (manual setting) - possible interactivity errors
 fitStd <- function(std, xvar, yvar, dilvar = "Dilution",
                    model = "sigmoid", Alow = NULL, asym = TRUE,
                    interactive = TRUE, monot.prompt = FALSE,
@@ -141,7 +143,7 @@ fitStd <- function(std, xvar, yvar, dilvar = "Dilution",
         mtext("Click on an outlier", col = "red", cex = 1.2)
         out  <- locator(n = 1)
         iout <- c(iout, locatePt(out$x, out$y, std[, xvar], std[, yvar]))
-        points(std[iout, xvar], std[iout, yvar], col = 2, pch = 4, cex = 2)
+#        points(std[iout, xvar], std[iout, yvar], col = 2, pch = 4, cex = 2)
         if (grepl("sig", model)) {
           if (!is.null(Alow)) {
             startval <- getStart3par(std[-iout, xvar], std[-iout, yvar], Alow,
@@ -228,7 +230,7 @@ fitStd <- function(std, xvar, yvar, dilvar = "Dilution",
     }
     if (overlower || overwrite.bounds) {
       ans1 <- readline("Set lower bound manually? (y/n) ")
-      if (tolower(ans1) == "y"){
+      if (tolower(ans1) == "y") {
         revise <- TRUE
         flag <- paste(flag, ", lb_manual", sep = "")
         if (!rm.after) {  # no active current plot
