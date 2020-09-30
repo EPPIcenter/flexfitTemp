@@ -19,13 +19,19 @@
 #'
 #' @export
 
-fitStd <- function(std, xvar, yvar, dilvar,
+#*** added defaults for dilvar, stdcol, rugcol (not in flexfit)
+#*** added nv = 10 (but not documented!)
+#*** added options(warn = 1) - in that case can remove from processSmp()
+fitStd <- function(std, xvar, yvar, dilvar = "Dilution",
                    model = "sigmoid", Alow = NULL, asym = TRUE,
                    interactive = TRUE, monot.prompt = FALSE,
                    rm.before = FALSE, rm.after = interactive, maxrm = 2,
                    set.bounds = FALSE, overwrite.bounds = FALSE, bg = NULL,
                    vsmp = NULL, optmethod = "Nelder-Mead", maxit = 5e3,
-                   info = "", ifix = NULL, stdcol, rugcol, ...) {
+                   info = "", ifix = NULL, nv = 10,
+                   stdcol = c("firebrick3", "darkslategray"),
+                   rugcol = c("cadetblue", "purple", "firebrick2"), ...) {
+  if (interactive) options(warn = 1)
   if (!is.null(Alow) && Alow == "bg") Alow <- mean(bg)  # on a log scale
   flag <- ""
   iout <- NULL
@@ -81,7 +87,7 @@ fitStd <- function(std, xvar, yvar, dilvar,
       }
     }
     if (is.null(Alow)) {  # lower asymptote not fixed (originally or later)
-      startval <- getStart4par(std1[, xvar], std1[, yvar], ifix = ifix,
+      startval <- getStart4par(std1[, xvar], std1[, yvar], ifix = ifix, nv = nv,
                                info = info)
     }
   } else {  # model 5 (6 parameters) *** update when available
@@ -120,7 +126,8 @@ fitStd <- function(std, xvar, yvar, dilvar,
     mindet <- max(min(std1[, yvar]), fitpar["Alow"])
     maxdet <- min(max(std1[, yvar]), fitpar["Aup"])
     smpflag[!(mindet <= vsmp & vsmp <= maxdet)] <- "min"
-    plotFit(std, xvar, yvar, dilvar, fitpar = fitpar, FUNmod = FUNmod, bg = bg,
+    plotFit(std, xvar, yvar, dilvar, fitpar = fitpar, FUNmod = FUNmod,
+            iout = iout, bg = bg,
             vsmp = vsmp, smpflag = smpflag, stdcol = stdcol, rugcol = rugcol,
             ...)
     #*** end INSERTED, uncomment plotFit() below
@@ -141,7 +148,7 @@ fitStd <- function(std, xvar, yvar, dilvar,
                                      ifix = NULL)
           } else {
             startval <- getStart4par(std[-iout, xvar], std[-iout, yvar],
-                                     ifix = NULL, info = info)
+                                     ifix = NULL, nv = nv, info = info)
           }
         } else {}  # model 5 (6 parameters)
         if (is.na(startval[1])) {
@@ -163,7 +170,7 @@ fitStd <- function(std, xvar, yvar, dilvar,
         maxdet <- min(max(std1[, yvar]), fitpar["Aup"])
         smpflag[!(mindet <= vsmp & vsmp <= maxdet)] <- "min"
         plotFit(std, xvar, yvar, dilvar, fitpar = fitpar, FUNmod = FUNmod,
-                bg = bg, vsmp = vsmp, smpflag = smpflag,
+                iout = iout, bg = bg, vsmp = vsmp, smpflag = smpflag,
                 stdcol = stdcol, rugcol = rugcol, ...)
         #*** end INSERTED, uncomment plotFit() below
 #        plotFit(std, xvar, yvar, dilvar, fitpar = fitpar, FUNmod = FUNmod,
@@ -232,7 +239,7 @@ fitStd <- function(std, xvar, yvar, dilvar,
           maxdet <- min(max(std1[, yvar]), fitpar["Aup"])
           smpflag[!(mindet <= vsmp & vsmp <= maxdet)] <- "min"
           plotFit(std, xvar, yvar, dilvar, fitpar = fitpar, FUNmod = FUNmod,
-                  bg = bg, vsmp = vsmp, smpflag = smpflag,
+                  iout = iout, bg = bg, vsmp = vsmp, smpflag = smpflag,
                   stdcol = stdcol, rugcol = rugcol, ...)
           #*** end INSERTED, uncomment plotFit() below
 #          plotFit(std, xvar, yvar, dilvar, fitpar = fit$par, FUNmod = FUNmod,
@@ -290,6 +297,7 @@ fitStd <- function(std, xvar, yvar, dilvar,
       }
     }
   }
+  if (interactive) options(warn = 0)
   return(list(par = fitpar, bounds = bounds, iout = iout, flag = flag))
 }
 
