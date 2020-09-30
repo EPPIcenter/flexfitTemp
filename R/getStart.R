@@ -27,13 +27,14 @@ getStart4par <- function(x, y, ifix = NULL, nv = 10, info = "") {
     v <- vval[i]
     r <- vtoA(yshift, v, b, xfix, ifix)
     ss[i] <- sum((yshift[ivar] - r$A*(1/(1 + r$w*v^(x[ivar])) -
-                                          1/(1 + r$w*v^(xfix[1]))))^2)
+                                        1/(1 + r$w*v^(xfix[1]))))^2)
   }
   imin <- which.min(ss)
   # check fit: SS (sum of squares) too large
-  if (ss[imin] >= (n - 3)*(mean(abs(diff(y)))/2)^2) {
-    return(NA)
-  }
+  #*** UPDATED!!! (temporarily)
+  #  if (ss[imin] > (n - 3)*(mean(abs(diff(y)))/2)^2) {  #*** if all == 0
+  #    return(NA)
+  #  }
   if (imin %in% c(1, nv - 1)) {
     vmin <- vval[imin]                                       # not a good fit
   } else {
@@ -46,12 +47,13 @@ getStart4par <- function(x, y, ifix = NULL, nv = 10, info = "") {
   if (rmin$w <= 0) {    # then A <= 0
     warning(paste(info, "Potential fit problem, manual check recommended"))
     high <- imin >= nv/2
-    while(rmin$w <= 0) {
+    while(rmin$w <= 0 && 1 < imin && imin < (nv - 1)) {
       imin <- high*(imin - 1) + (!high)*(imin + 1)  # increment/decrement imin
       vmin <- vval[imin]
       wold <- rmin$w
       rmin <- vtoA(yshift, vmin, b, xfix, ifix)
       wnew <- rmin$w
+      wnew; imin
       if (wnew < wold) {
         break
       }
