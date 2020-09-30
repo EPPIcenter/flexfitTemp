@@ -102,6 +102,8 @@
 #'
 #' @export
 
+#*** NOTE nv is not an arg (but temporarily is an argument for fitStd())
+#*** remove options() if we keep them in fitStd()
 processSmp <- function(smp, std, bg = NULL, smpdil = 1, fitlog = "xy",
                        ismp = 1:nrow(smp),
                        plotdir = "./", pname = NULL, ptitle = "fit and samples",
@@ -118,7 +120,7 @@ processSmp <- function(smp, std, bg = NULL, smpdil = 1, fitlog = "xy",
                        stdcol = c("firebrick3", "darkslategray"),
                        rugcol = c("cadetblue", "purple", "firebrick2"),
                        width = 7, height = 6, ...) {
-  options(warn = 1)    # for interactivity
+#  options(warn = 1)    # for interactivity
   if (!inherits(smp, "data.frame")) {
     smp <- as.data.frame(smp)
   }
@@ -192,7 +194,7 @@ processSmp <- function(smp, std, bg = NULL, smpdil = 1, fitlog = "xy",
             main = ptitle, xlab = xlab, ylab = ylab, ...)
   }
   dev.off()
-  options(warn = 0)
+#  options(warn = 0)
   #  return(list(smp = dfout, fitflag = finfit$flag))  #*** if not below
   #***================ optional: number of trimmed samples =================***#
   return(list(smp = dfout, fitflag = finfit$flag, ntrim = sum(dfout$trimmed)))

@@ -21,9 +21,11 @@
 
 #*** added defaults for dilvar, stdcol, rugcol (not in flexfit)
 #*** added nv = 10 (but not documented!)
+#*** note nv is still NOT and arg for processSmp() - decide if keep that way
 #*** added options(warn = 1) - in that case can remove from processSmp()
 #*** check the replottings; some might be unnecessary
-#*** look into bounds plotting (manual setting) - possible interactivity errors
+#*** look into bounds plotting (manual setting) - possible interactivity errors?
+#*** note plotFit() now has trimval, trimext args (so use instead of abline?)
 fitStd <- function(std, xvar, yvar, dilvar = "Dilution",
                    model = "sigmoid", Alow = NULL, asym = TRUE,
                    interactive = TRUE, monot.prompt = FALSE,
@@ -33,7 +35,7 @@ fitStd <- function(std, xvar, yvar, dilvar = "Dilution",
                    info = "", ifix = NULL, nv = 10,
                    stdcol = c("firebrick3", "darkslategray"),
                    rugcol = c("cadetblue", "purple", "firebrick2"), ...) {
-  if (interactive) options(warn = 1)
+  options(warn = 1)
   if (!is.null(Alow) && Alow == "bg") Alow <- mean(bg)  # on a log scale
   flag <- ""
   iout <- NULL
@@ -299,7 +301,7 @@ fitStd <- function(std, xvar, yvar, dilvar = "Dilution",
       }
     }
   }
-  if (interactive) options(warn = 0)
+  options(warn = 0)
   return(list(par = fitpar, bounds = bounds, iout = iout, flag = flag))
 }
 
